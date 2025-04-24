@@ -11,7 +11,7 @@ import {
 function FormControls({ formControls = [], formData, setFormData }) {
   function renderComponentByType(getControlItem) {
     let element = null;
-    const currentControlItemValue = formData[getControlItem.name] || '';
+    const currentControlItemValue = formData?.[getControlItem.name] || '';
 
     switch (getControlItem.componentType) {
       case "input":
