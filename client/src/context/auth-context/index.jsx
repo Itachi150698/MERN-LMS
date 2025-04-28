@@ -71,6 +71,14 @@ export default function AuthProvider({ children }) {
       }
     }
   }
+
+  function resetCredentials() {
+    setAuth({
+      authenticate: false,
+      user: null,
+    });
+  }
+
   useEffect(() => {
     checkAuthUser();
   }, []);
@@ -88,6 +96,7 @@ export default function AuthProvider({ children }) {
         handleLoginUser,
         auth,
         checkAuthUser,
+        resetCredentials,
       }}
     >
       {loading ? <Skeleton /> : children}
