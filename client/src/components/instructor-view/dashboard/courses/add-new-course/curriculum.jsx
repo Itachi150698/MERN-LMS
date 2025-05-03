@@ -11,16 +11,35 @@ function CourseCurriculum() {
   const { courseCurriculumFormData, setCourseCurriculumFormData } =
     useContext(InstructorContext);
 
-    function handleNewLecture() {
-        setCourseCurriculumFormData([
-            ...courseCurriculumFormData,
-            {
-                ...courseCurriculumInitialFormData[0]
-            }
-        ])
-    }
+  function handleNewLecture() {
+    setCourseCurriculumFormData([
+      ...courseCurriculumFormData,
+      {
+        ...courseCurriculumInitialFormData[0],
+      },
+    ]);
+  }
 
-    console.log(courseCurriculumFormData);
+  function handleCourseTitleChange(event, currentIndex) {
+    let cypCourseCurriculumFormData = [...courseCurriculumFormData];
+    cypCourseCurriculumFormData[currentIndex] = {
+      ...cypCourseCurriculumFormData[currentIndex],
+      title: event.target.value
+    };
+    setCourseCurriculumFormData(cypCourseCurriculumFormData); 
+  }
+
+  function handleFreePreviewChange(currentValue, currentIndex) {
+    console.log(currentValue, currentIndex)
+    let cypCourseCurriculumFormData = [...courseCurriculumFormData];
+    cypCourseCurriculumFormData[currentIndex] = {
+      ...cypCourseCurriculumFormData[currentIndex],
+      freePreview: currentValue
+    };
+    setCourseCurriculumFormData(cypCourseCurriculumFormData); 
+  }
+
+  console.log(courseCurriculumFormData);
 
   return (
     <Card>
@@ -38,9 +57,11 @@ function CourseCurriculum() {
                   name={`title-${index + 1}`}
                   placeholder="Enter lecture title"
                   className="max-w-96"
+                  onChange={(event) => handleCourseTitleChange(event, index)}
+                  value={courseCurriculumFormData[index]?.title}
                 />
                 <div className="flex items-center space-x-2">
-                  <Switch checked={true} id={`freePreview-${index + 1}`} />
+                  <Switch onCheckedChange={(value)=> handleFreePreviewChange(value, index)} checked={courseCurriculumFormData[index]?.freePreview} id={`freePreview-${index + 1}`} />
                   <Label htmlfor={`freePreview-${index + 1}`}>
                     Free Preview
                   </Label>
