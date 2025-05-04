@@ -1,6 +1,6 @@
 import CourseLanding from "@/components/instructor-view/dashboard/courses/add-new-course/course-landing";
 import CourseSettings from "@/components/instructor-view/dashboard/courses/add-new-course/course-settings";
-import CourseCurriculum from "@/components/instructor-view/dashboard/courses/add-new-course/curriculum";
+import CourseCurriculum from "@/components/instructor-view/dashboard/courses/add-new-course/course-curriculum";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
