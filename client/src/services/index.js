@@ -1,5 +1,6 @@
 import axiosInstance from "@/api/axiosInstance";
 
+
 export async function registerService(formData) {
   const { data } = await axiosInstance.post('/auth/register', {
     ...formData,
@@ -21,8 +22,15 @@ export async function checkAuthService() {
   return data;
 }
 
-export async function mediaUploadService(formData) {
-  const { data } = await axiosInstance.post('/media/upload', formData);
+export async function mediaUploadService(formData, onProgressCallBack) {
+  const { data } = await axiosInstance.post('/media/upload', formData, {
+    onUploadProgress: (progressEvent) => {
+      const percentCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+      onProgressCallBack(percentCompleted);
+    },
+  });
 
   return data;
 }
