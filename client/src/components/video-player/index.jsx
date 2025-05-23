@@ -70,7 +70,7 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
     const date = new Date(seconds * 1000);
     const hh = date.getUTCHours();
     const mm = date.getUTCMinutes();
-    const ss = date.getUTCSeconds();
+    const ss = pad(date.getUTCSeconds());
 
     if (hh) {
       return `${hh}:${pad(mm)}:${ss}`;
@@ -81,8 +81,8 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
 
   const handleFullScreen = useCallback(() => {
     if (!isFullScreen) {
-      if (playerContainerRef?.current.requestFullScreen) {
-        playerContainerRef?.current?.requestFullScreen();
+      if (playerContainerRef?.current.requestFullscreen) {
+        playerContainerRef?.current?.requestFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
@@ -90,6 +90,12 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
       }
     }
   }, [isFullScreen]);
+
+  function handleMouseMove() {
+    setShowControls(true)
+    clearTimeout(controlsTimeoutRef.current)
+    controlsTimeoutRef.current = setTimeout(()=>setShowControls(false), 3000);
+  }
 
   useEffect(() => {
     const handleFullScreenChange = () => {
@@ -108,6 +114,8 @@ function VideoPlayer({ width = "100%", height = "100%", url }) {
       className={`relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl transition-all duration-300 ease-in-out
       ${isFullScreen ? "w-screen h-screen" : ""}`}
       style={{ width, height }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={()=>setShowControls(false)}
     >
       <ReactPlayer
         ref={playerRef}

@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import VideoPlayer from "@/components/video-player";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
-import { mediaUploadService } from "@/services";
+import { mediaDeleteService, mediaUploadService } from "@/services";
 import { useContext } from "react";
 
 function CourseCurriculum() {
@@ -78,7 +78,39 @@ function CourseCurriculum() {
     }
   }
 
+  async function handleReplaceVideo(currentIndex) {
+    let cypCourseCurriculumFormData = [...courseCurriculumFormData];
+    const getCurrentVideoPublicId =
+      cypCourseCurriculumFormData[currentIndex].public_id;
+    const deleteCurrentMediaResponse = await mediaDeleteService(
+      getCurrentVideoPublicId
+    );
+    console.log(deleteCurrentMediaResponse, "deleteCurrentMediaResponse");
+
+    if (deleteCurrentMediaResponse?.success) {
+      cypCourseCurriculumFormData[currentIndex] = {
+        ...cypCourseCurriculumFormData[currentIndex],
+        videoUrl: "",
+        public_id: "",
+      };
+      setCourseCurriculumFormData(cypCourseCurriculumFormData);
+    }
+  }
+
+  function isCourseCurriculumFormDataValid() {
+    return courseCurriculumFormData.every((item) => {
+      return (
+        item &&
+        typeof item === "object" &&
+        item.title.trim() !== "" &&
+        item.videoUrl.trim() !== ""
+      );
+    });
+  }
+
   console.log(courseCurriculumFormData);
+  
+
 
   return (
     <Card>
@@ -86,7 +118,12 @@ function CourseCurriculum() {
         <CardTitle>Create Course Curriculum</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button onClick={handleNewLecture}>Add Lecture</Button>
+        <Button
+          disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress}
+          onClick={handleNewLecture}
+        >
+          Add Lecture
+        </Button>
         {mediaUploadProgress ? (
           <MediaProgressBar
             isMediaUploading={mediaUploadProgress}
@@ -121,11 +158,14 @@ function CourseCurriculum() {
               <div className="mt-6">
                 {courseCurriculumFormData[index]?.videoUrl ? (
                   <div className="flex gap-3">
-                    <VideoPlayer url={courseCurriculumFormData[index]?.videoUrl}
+                    <VideoPlayer
+                      url={courseCurriculumFormData[index]?.videoUrl}
                       width="450px"
                       height="200px"
                     />
-                    <Button>Replace Video</Button>
+                    <Button onClick={() => handleReplaceVideo(index)}>
+                      Replace Video
+                    </Button>
                     <Button className="bg-red-900">Delete Lecture</Button>
                   </div>
                 ) : (
